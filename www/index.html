@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF8" />
+
+</head>
+
+<body>
+  <div style="width:49%;display:inline-block;vertical-align:top">
+    <div>
+      <button type="button" id="convertir">Convertir</button>
+      <button type="button" id="limpiar">Limpiar</button>
+    </div>
+    <div>
+      <select id="selRamlFiles">
+        <option value='world-music.raml'>World Music</option>
+        <option value='world-music-schema.raml'>World Music (schema)</option>
+      </select>
+      <button type="button" id="pegar">Pegar</button>
+    </div>
+    <div>
+      <textarea id="ramlInput" placeholder="Raml" style="width:100%;resize:vertical" rows="20">
+      </textarea>
+    </div>
+  </div>
+  <div style="width:49%;display:inline-block;vertical-align:top">
+    <pre id="resultado">El resultado irá aqui</pre>
+  </div>
+
+  <script type="text/javascript" src="//code.jquery.com/jquery-2.1.3.min.js"></script>
+  <script type="text/javascript" src="../node_modules/raml-parser/dist/raml-parser.js"></script>
+  <script type="text/javascript">
+    // Obtener elementos del dom
+    var lblResultado = $('#resultado');
+    var txtRamlInput = $('#ramlInput');
+
+    function procesarRaml(raml, callback) {
+      RAML.Parser.load(raml).then(function(data) {
+        callback(data);
+      }, function(error) {
+        callback("ERROR:\n" + error);
+      });
+    };
+
+    // Manejar clic de botones
+    $('#convertir').click(function() {
+      lblResultado.text("Procesando...");
+      procesarRaml(txtRamlInput.val(), function(resultado) {
+        lblResultado.text(JSON.stringify(resultado, null, 2));
+      });
+    });
+
+    $('#limpiar').click(function() {
+      txtRamlInput.val('');
+    });
+
+    $('#pegar').click(function() {
+      var archivo =  $('#selRamlFiles option:selected').val()
+      console.log("Cargando "+archivo+"...");
+      txtRamlInput.load(
+        'test-raml/' + archivo
+      );
+    });
+  </script>
+</body>
+
+</html>
