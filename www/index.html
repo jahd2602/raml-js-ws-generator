@@ -9,10 +9,12 @@
 <body>
   <div style="width:49%;display:inline-block;vertical-align:top">
     <div>
-      <button type="button" id="convert">Convert</button>
+      <button type="button" id="convert">Convert to object</button>
+      <button type="button" id="convertSlim">Convert to slim</button>
       <button type="button" id="clean">Clean</button>
     </div>
     <div>
+      <label for="selRamlFiles">Samples:</label>
       <select id="selRamlFiles">
         <option value='world-music.raml'>World Music</option>
         <option value='world-music-schema.raml'>World Music (schema)</option>
@@ -20,7 +22,7 @@
       <button type="button" id="paste">Paste</button>
     </div>
     <div>
-      <textarea id="ramlInput" placeholder="Raml" style="width:100%;resize:vertical" rows="20">
+      <textarea id="ramlInput" placeholder="Raml" style="width:100%;resize:vertical" rows="40">
       </textarea>
     </div>
   </div>
@@ -30,10 +32,21 @@
 
   <script type="text/javascript" src="//code.jquery.com/jquery-2.1.3.min.js"></script>
   <script type="text/javascript" src="../node_modules/raml-parser/dist/raml-parser.js"></script>
+  <script type="text/javascript" src="../dist/raml-js-ws-generator.1.0.0.min.js"></script>
   <script type="text/javascript">
-    // Obtener elementos del dom
+  
+    // --- DOM ---
+    
     var lblResult = $('#result');
     var txtRamlInput = $('#ramlInput');
+    var generators = require('raml-ws-generators');
+    
+    // --- Functions ---
+    
+    var generateSchema = function (ast) {
+        var selectedLanguage = $languages.find('option:selected').val();
+        return generators[selectedLanguage](ast, {});
+    };
 
     function processRaml(raml, callback) {
       RAML.Parser.load(raml).then(function(data) {
@@ -42,12 +55,35 @@
         callback("ERROR:\n" + error);
       });
     };
+     
+    function processRamlToPHP(raml, callback) {
+      RAML.Parser.load(raml).then(function (data) {
+            var generatedScript = generateSchema(data).files;
+            var outputFiles = [];
 
-    // Manejar clic de botones
+            Object.keys(generatedScript).forEach(function (fileName) {
+                outputFiles.push('[' + fileName + ']\n' + generatedScript[fileName] + '\n');
+            });
+
+            callback(outputFiles.join('\n-------------------------------\n'));
+        }, function (error) {
+            callback(error);
+        });
+    };
+
+    // --- Click handlers ---
+    
     $('#convert').click(function() {
       lblResult.text("Processing...");
       processRaml(txtRamlInput.val(), function(result) {
         lblResult.text(JSON.stringify(result, null, 2));
+      });
+    });
+    
+    $('#convertSlim').click(function() {
+      lblResult.text("Processing...");
+      processRamlToPHP(txtRamlInput.val(), function(result) {
+        lblResult.text(result);
       });
     });
 
