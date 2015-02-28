@@ -2,6 +2,9 @@ var swig = require('swig'),
     util = require('util'),
     S = require('string');
 
+require('./filters/base');
+require('./filters/custom');
+
 var includeFolder = require('include-folder'),
     folder = includeFolder(__dirname + '/templates');
 

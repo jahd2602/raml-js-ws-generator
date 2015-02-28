@@ -30,5 +30,6 @@ node_modules
 
 .c9
 .idea
+.directory
 output/
 dist/

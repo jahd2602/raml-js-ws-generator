@@ -12,7 +12,7 @@ $app->group('{{resource.relativeUri}}', function () use ($app) {
     *
     * Uri parameters:{%for uriParameter,uriParameterProperties in resource.uriParameters%} {{uriParameter}}{%endfor%}{%endif%}
     */
-    $app->{{method.method}}(null, 'APIrequest', function () use ($app) {
+    $app->{{method.method}}(null, 'APIrequest', function ({{resource.uriParameters | joinFromKeysToPHPParams}}) use ($app) {
             {%if method.queryParameters%}{%for param,paramProperties in method.queryParameters%}${{param}} = $app->request->params('{{param}}');
             {%endfor%}{%endif%}// ---WS-GENERATOR-USER-AREA-START---
 
