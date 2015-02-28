@@ -10,12 +10,13 @@
   <div style="width:49%;display:inline-block;vertical-align:top">
     <div>
       <button type="button" id="convert">Convert to object</button>
-      <button type="button" id="convertSlim">Convert to slim</button>
+      <button type="button" id="convertSlim">Convert to php</button>
       <button type="button" id="clean">Clean</button>
     </div>
     <div>
       <label for="selRamlFiles">Samples:</label>
       <select id="selRamlFiles">
+        <option value='world-music-no-recursive.raml'>World Music (no recursive)</option>
         <option value='world-music.raml'>World Music</option>
         <option value='world-music-schema.raml'>World Music (schema)</option>
       </select>
@@ -44,7 +45,7 @@
     // --- Functions ---
     
     var generateSchema = function (ast) {
-        var selectedLanguage = $languages.find('option:selected').val();
+        var selectedLanguage = 'php';
         return generators[selectedLanguage](ast, {});
     };
 
@@ -93,9 +94,9 @@
 
     $('#paste').click(function() {
       var archivo =  $('#selRamlFiles option:selected').val()
-      console.log("Cargando "+archivo+"...");
+      console.log("Loading "+archivo+"...");
       txtRamlInput.load(
-        'test-raml/' + archivo
+        '../www/test-raml/' + archivo
       );
     });
   </script>

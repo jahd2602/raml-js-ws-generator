@@ -25,7 +25,7 @@ gulp.task('watch', function () {
 });
 
 gulp.task('watch:dist', function () {
-    watch(['./dist/*.js', './test/*.html', './www/**/*.raml'], function () {
+    watch(['./dist/*.js', './www/*.html', './www/**/*.raml'], function () {
         notify({message: 'reloading'});
         browserSync.reload();
     });
@@ -50,10 +50,10 @@ gulp.task('build', ['lint'], function () {
         return bundler
             .bundle()
             .pipe(source(getBundleName() + '.js'))
-            .pipe(buffer())
-            .pipe(sourcemaps.init({loadMaps: true}))
-            .pipe(uglify())
-            .pipe(sourcemaps.write('./'))
+//            .pipe(buffer()) TODO descomentar
+//            .pipe(sourcemaps.init({loadMaps: true}))
+//            .pipe(uglify())
+//            .pipe(sourcemaps.write('./'))
             .pipe(gulp.dest('./dist/'));
     };
 
